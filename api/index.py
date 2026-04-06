@@ -14,10 +14,16 @@ supabase = create_client(url, key)
 @app.route('/api/reserve', methods=['POST'])
 def reserve():
     try:
-        data = request.get_json(force=True)
+        # Use silent=True so it doesn't crash if the body is weird
+        data = request.get_json(silent=True)
         
-        # This sends the data to Supabase
-        result = supabase.table("reservations").insert({
+        if not data:
+            return jsonify({"status": "error", "message": "No JSON data received"}), 400
+
+        # Log exactly what we received to the Vercel console
+        print(f"DEBUG: Data received: {data}")
+
+        response = supabase.table("reservations").insert({
             "name": data.get('name'),
             "date": data.get('date'),
             "time": data.get('time'),
@@ -25,7 +31,8 @@ def reserve():
         }).execute()
         
         return jsonify({"status": "success", "message": "Booked!"}), 200
+
     except Exception as e:
-        # This will show up in those RED logs in your screenshot
-        print(f"DATABASE ERROR: {str(e)}") 
-        return jsonify({"status": "error", "message": str(e)}), 500
+        # This writes the REAL error to your Vercel logs
+        print(f"CRITICAL ERROR: {str(e)}") 
+        return jsonify({"status": "error", "message": f"Server Error: {str(e)}"}), 500
