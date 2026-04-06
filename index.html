@@ -78,10 +78,10 @@ const modal = document.getElementById("reservationModal");
         // Collect data from the form
         // Inside your onsubmit function
 const bookingData = {
-    name: document.querySelector('input[placeholder="Your Name"]').value,
+    name: document.querySelector('input[type="text"]').value,
     date: document.querySelector('input[type="date"]').value,
     time: document.querySelector('input[type="time"]').value,
-    guests: document.getElementById("guestSelect").value // Now it can find it!
+    guests: parseInt(document.querySelector('select').value) // Ensure it's a number
 };
 
         // Send data to the Python Backend on Vercel
