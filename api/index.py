@@ -14,20 +14,22 @@ supabase = create_client(url, key)
 @app.route('/api/reserve', methods=['POST'])
 def reserve():
     try:
-        data = request.json
-        # Insert into Supabase table
+        # Get data safely
+        data = request.get_json(force=True) 
+        
+        # Log it to the Vercel console so we can see it
+        print(f"Received data: {data}")
+
+        # Insert into Supabase
+        # We use .get() to avoid crashing if a field is missing
         response = supabase.table("reservations").insert({
-            "name": data['name'],
-            "date": data['date'],
-            "time": data['time'],
-            # Change this line in your api/index.py
-            "guests": int(data.get('guests', 1))
+            "name": data.get('name', 'Unknown'),
+            "date": data.get('date', ''),
+            "time": data.get('time', ''),
+            "guests": int(data.get('guests') or 1)
         }).execute()
         
-        return jsonify({"status": "success", "message": "Reservation confirmed!"}), 200
+        return jsonify({"status": "success"}), 200
     except Exception as e:
+        print(f"ERROR: {str(e)}") # This will show up in your red logs!
         return jsonify({"status": "error", "message": str(e)}), 500
-
-# DO NOT write 'app = Flask(__name__)' again here.
-# Vercel just needs to find the 'app' object.
-app = app
