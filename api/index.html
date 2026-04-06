@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Deliziosa | Real Italian Pizza</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Pizza Deliziosa</h1>
+        <p>The best wood-fired pizza in the city.</p>
+    </header>
+
+    <section id="menu">
+        <h2>Our Menu</h2>
+        <ul>
+            <li><strong>Margherita</strong> - Tomato, Mozzarella, Basil</li>
+            <li><strong>Pepperoni</strong> - Spicy Salami, Cheese, Tomato</li>
+            <li><strong>Four Cheese</strong> - Gorgonzola, Parmesan, Mozzarella, Goat Cheese</li>
+        </ul>
+    </section>
+
+    <section id="booking-section">
+        <h2>Ready to visit?</h2>
+        <p>Click the button below to start your reservation.</p>
+        <button class="btn-reserve">Reserve a Table</button>
+    </section>
+
+    <div id="reservationModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>Book Your Table</h2>
+    <form id="bookingForm">
+      <input type="text" placeholder="Your Name" required>
+      <input type="date" required>
+      <input type="time" required>
+      <select>
+        <option value="1">1 Person</option>
+        <option value="2">2 People</option>
+        <option value="4">4 People</option>
+        <option value="6">6+ People</option>
+      </select>
+      <button type="submit" class="btn-reserve">Confirm Booking</button>
+    </form>
+  </div>
+</div>
+
+<script>
+    const modal = document.getElementById("reservationModal");
+    const btn = document.querySelector(".btn-reserve");
+    const span = document.querySelector(".close-btn");
+
+    // Open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // Close the modal when clicking (x)
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Handle form submission
+    document.getElementById("bookingForm").onsubmit = function(e) {
+        e.preventDefault();
+        alert("Reservation Request Sent! We will contact you soon.");
+        modal.style.display = "none";
+    }
+
+    document.getElementById("bookingForm").onsubmit = function(e) {
+    e.preventDefault();
+
+    // Collect data from the form
+    const bookingData = {
+        name: document.querySelector('input[type="text"]').value,
+        date: document.querySelector('input[type="date"]').value,
+        time: document.querySelector('input[type="time"]').value,
+        guests: document.querySelector('select').value
+    };
+
+    // Send data to the Python Backend
+    fetch('/reserve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Success! " + data.message);
+        modal.style.display = "none";
+    });
+}
+</script>
+
+</body>
+</html>
