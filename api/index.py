@@ -20,7 +20,8 @@ def reserve():
             "name": data['name'],
             "date": data['date'],
             "time": data['time'],
-            "guests": int(data['guests'])
+            # Change this line in your api/index.py
+            "guests": int(data.get('guests', 1))
         }).execute()
         
         return jsonify({"status": "success", "message": "Reservation confirmed!"}), 200
