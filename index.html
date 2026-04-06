@@ -36,12 +36,11 @@
       <input type="text" placeholder="Your Name" required>
       <input type="date" required>
       <input type="time" required>
-      <select>
-        <option value="1">1 Person</option>
-        <option value="2">2 People</option>
-        <option value="4">4 People</option>
-        <option value="6">6+ People</option>
-      </select>
+      <select id="guestSelect"> <option value="1">1 Person</option>
+    <option value="2">2 People</option>
+    <option value="4">4 People</option>
+    <option value="6">6+ People</option>
+</select>
       <button type="submit" class="btn-reserve">Confirm Booking</button>
     </form>
   </div>
@@ -77,12 +76,13 @@ const modal = document.getElementById("reservationModal");
         e.preventDefault();
 
         // Collect data from the form
-        const bookingData = {
-            name: document.querySelector('input[placeholder="Your Name"]').value,
-            date: document.querySelector('input[type="date"]').value,
-            time: document.querySelector('input[type="time"]').value,
-            guests: document.querySelector('select').value
-        };
+        // Inside your onsubmit function
+const bookingData = {
+    name: document.querySelector('input[placeholder="Your Name"]').value,
+    date: document.querySelector('input[type="date"]').value,
+    time: document.querySelector('input[type="time"]').value,
+    guests: document.getElementById("guestSelect").value // Now it can find it!
+};
 
         // Send data to the Python Backend on Vercel
         fetch('/api/reserve', { // Added /api/ here
